@@ -53,20 +53,20 @@ export const GameBoard: React.FC<GameBoardProps> = ({
         return 'text-white';
     }
   };
-  useEffect(() => {
-  const gameFinished =
+  
+ useEffect(() => {
+  if (
     gameState.gameStatus === 'playerWon' ||
     gameState.gameStatus === 'dealerWon' ||
-    gameState.gameStatus === 'tie';
+    gameState.gameStatus === 'tie'
+  ) {
+    const timer = setTimeout(() => {
+      onNewGame();
+    }, 5000);
 
-  if (!gameFinished) return;
-
-  const timer = setTimeout(() => {
-    onNewGame();
-  }, 5000);
-
-  return () => clearTimeout(timer);
-}, [gameState.gameStatus, onNewGame]);
+    return () => clearTimeout(timer);
+  }
+}, [gameState.gameStatus]);
 
   return (
     <div className="w-full max-w-4xl mx-auto bg-black rounded-2xl p-6 shadow-2xl border-4 border-red-600">
