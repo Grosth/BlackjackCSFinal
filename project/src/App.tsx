@@ -115,14 +115,6 @@ function App() {
   };
 
   // Initialize game state when user logs in
-  useEffect(() => {
-    if (user) {
-      setGameState({
-        ...GameService.initializeGame(10),
-        gameStatus: 'waiting'
-      });
-    }
-  }, [user]);
 
   if (!user) {
     return (
