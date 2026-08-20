@@ -23,42 +23,51 @@ function App() {
     }
   };
 
-  const handleGameEnd = (result: 'win' | 'loss' | 'tie') => {
-    if (!user) return;
+const handleGameEnd = (result: 'win' | 'loss' | 'tie') => {
+  if (!user) return;
 
-    // Save game record to database
-    saveGameRecord(gameState.bet, result, gameState.playerScore, gameState.dealerScore);
+  saveGameRecord(
+    gameState.bet,
+    result,
+    gameState.playerScore,
+    gameState.dealerScore
+  );
 
-    let chipsChange = 0;
-    let wins = user.wins;
-    let losses = user.losses;
-    let ties = user.ties;
+  let chipsChange = 0;
+  let wins = user.wins;
+  let losses = user.losses;
+  let ties = user.ties;
 
-    switch (result) {
-      case 'win':
-        chipsChange = gameState.bet;
-        wins += 1;
-        break;
-      case 'loss':
-        chipsChange = -gameState.bet;
-        losses += 1;
-        break;
-      case 'tie':
-        ties += 1;
-        break;
-    }
+  switch (result) {
+    case 'win':
+      chipsChange = gameState.bet;
+      wins += 1;
+      break;
 
-    const updatedUser = {
-      ...user,
-      chips: Math.max(0, user.chips + chipsChange),
-      wins,
-      losses,
-      ties
-    };
+    case 'loss':
+      chipsChange = -gameState.bet;
+      losses += 1;
+      break;
 
-    updateUser(updatedUser);
+    case 'tie':
+      ties += 1;
+      break;
+  }
+
+  const updatedUser = {
+    ...user,
+    chips: Math.max(0, user.chips + chipsChange),
+    wins,
+    losses,
+    ties
   };
 
+  updateUser(updatedUser);
+
+  setShowResult(true);
+};
+
+  
   const handleHit = () => {
     const newState = GameService.hit(gameState);
     setGameState(newState);
@@ -94,18 +103,14 @@ function App() {
     }
   };
 
-  const handleNewGame = () => {
-    if (gameState.gameStatus === 'waiting') {
-      // Start new game with current bet
-      setGameState(GameService.initializeGame(gameState.bet));
-    } else {
-      // Reset to waiting state
-      setGameState({
-        ...GameService.initializeGame(10),
-        gameStatus: 'waiting'
-      });
-    }
-  };
+ const handleNewGame = () => {
+  setShowResult(false);
+
+  setGameState({
+    ...GameService.initializeGame(10),
+    gameStatus: 'waiting'
+  });
+};
 
   const handleBetChange = (bet: number) => {
     setGameState({
