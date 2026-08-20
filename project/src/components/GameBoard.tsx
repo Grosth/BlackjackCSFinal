@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card } from './Card';
 import { GameState } from '../types/game';
 import { calculateHandValue } from '../utils/cardUtils';
@@ -53,6 +53,20 @@ export const GameBoard: React.FC<GameBoardProps> = ({
         return 'text-white';
     }
   };
+  useEffect(() => {
+  const gameFinished =
+    gameState.gameStatus === 'playerWon' ||
+    gameState.gameStatus === 'dealerWon' ||
+    gameState.gameStatus === 'tie';
+
+  if (!gameFinished) return;
+
+  const timer = setTimeout(() => {
+    onNewGame();
+  }, 5000);
+
+  return () => clearTimeout(timer);
+}, [gameState.gameStatus, onNewGame]);
 
   return (
     <div className="w-full max-w-4xl mx-auto bg-black rounded-2xl p-6 shadow-2xl border-4 border-red-600">
